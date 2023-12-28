@@ -1,0 +1,72 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.notes-container{
+    position: relative;
+}
+.notes-navbar{
+    display: flex;
+    align-items: center;
+    background-color: #cedb12;
+    height: 10vh;
+}
+#heading{
+    color: #fff;
+    margin-left: 20px;
+    font-size: 30px;
+    
+}
+#noteicon{
+    
+    margin-left: 20px;
+}
+#noteicon i {
+    cursor: pointer;
+}
+.notes-input{
+    background-color: #75FF33;
+    width: 450px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.notes-input h2{
+   margin-bottom: 1rem;
+}
+#input{
+    padding-left: 10px;
+    padding-top: 10px;
+    width: 300px;
+    height: 300px;
+    border: none;
+    outline: none;
+    font-size: 30px;
+}
+.addNotes-container{
+    position: absolute;
+    top: 9%;
+    left: 30%;
+    background-color: #3375FF;
+    width: 80vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.notes{
+    background-color: #fff;
+    width: 200px;
+    height: 150px;
+    margin: 20px 20px;
+    text-align: center;
+    padding-top: 20px;
+    font-size: 25px;
+    text-transform: capitalize;
+}
+i{
+    cursor: pointer;
+}
