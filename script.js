@@ -1,86 +1,59 @@
-
-let addNotesContainer = document.querySelector('.addNotes-container');
-let input = document.getElementById('input');
+let addNotesContainer = document.querySelector(".addNotes-container");
+let input = document.getElementById("input");
 let str = "";
+let edit = false;
+let index;
+
+let notes = JSON.parse(localStorage.getItem("notes")) || [];
+showLists() // execute for curren values in  notes
 
 
-const ondelete =(i) =>{
-  let notedata = JSON.parse(localStorage.getItem("notes"));
-   notedata = notedata.filter(note=>note != i);
-   localStorage.setItem("notes",JSON.stringify(notedata))
-   showNotes()
-} 
+  input.addEventListener('keypress',(e)=>{
+    if(e.key == "Enter"){
+      if(edit){
+        edit = false;
+       let finddata = input.value;
+        notes.splice(index,1,finddata);
+        localStorage.setItem("notes",JSON.stringify(notes));
+     showLists();
+     input.value = "";
 
-const onEdit = (i) =>{
-  input.value = i;
-  console.log(input.value);
-  let edit = true;
-  
-  let notedata = JSON.parse(localStorage.getItem("notes"));
-  let finduserInput = notedata.find(note=>note === input.value);
-  if(edit){
-    input.addEventListener('keypress',(e)=>{
-      if(e.key === "e" || e.key === "E"){
-        notedata = JSON.parse(localStorage.getItem("notes"));
-        if(input.value){
-          notedata.splice(finduserInput,1,input.value)
-
-          localStorage.setItem("notes",JSON.stringify(notedata));
-           showNotes()
-        }
-        
       }
-      input.value;
-    })
-    
-  }
-  
-
-}
-
-const showNotes = () =>{
-  let notesdata = JSON.parse(localStorage.getItem("notes"));
-  
-  if(notesdata){
-    addNotesContainer.innerHTML = "";
-  notesdata.forEach(note=>{
-    str = `<p class="notes">${note}<i onclick="ondelete('${note}')" class="fa-solid fa-delete-left"></i><i onclick="onEdit('${note}')" class="fa-solid fa-pen"></i></p>`;
-    addNotesContainer.innerHTML += str;
-  });
-  
-}
- else{
-  addNotesContainer.innerHTML = "<p class='notes'>No Notes here</p>";
- }
-  
-}
-showNotes()
-
-
-input.addEventListener('keypress',(e)=>{
-  if(e.key == "Enter"){
-    let notes = localStorage.getItem("notes");
-    if(notes == null){
-      let json = [];
-      json.push(input.value);
-      localStorage.setItem("notes",JSON.stringify(json))
+      else{
+        notes.push(input.value);
+        localStorage.setItem("notes",JSON.stringify(notes));
+        showLists();
+        input.value = "";
+      }
     }
-    else{
-      let json = JSON.parse(localStorage.getItem("notes"));
-      json.push(input.value);
-      localStorage.setItem("notes",JSON.stringify(json))
-    }
-    showNotes()
-    input.value = "";
-    
+  })
+
+
+
+function showLists(){
+  str = "";
+  if(notes.length > 0){
+    notes.forEach(note=>{
+      str += `<p class="notes">${note}<i onclick="ondelete('${note}')" class="fa-solid fa-delete-left"></i><i onclick="onEdit('${note}')" class="fa-solid fa-pen"></i></p>`;
+    });
+    addNotesContainer.innerHTML = str;
   }
-});
+  else{
+    addNotesContainer.innerHTML = "Please Add notes";
+  }
+}
 
 
 
+const ondelete = (item) =>{
+  notes = notes.filter(note=>note != item);
+  localStorage.setItem("notes",JSON.stringify(notes));
+  showLists();
+}
 
 
-
-
-
-
+const onEdit = (item) =>{
+  edit = true;
+   index = notes.findIndex(note=>note == item);
+  input.value = notes[index];
+}
