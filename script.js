@@ -1,59 +1,59 @@
 let addNotesContainer = document.querySelector(".addNotes-container");
 let input = document.getElementById("input");
-let str = "";
 let edit = false;
 let index;
 
-let notes = JSON.parse(localStorage.getItem("notes")) || [];
-showLists() // execute for curren values in  notes
+let notes = JSON.parse(localStorage.getItem('notes')) || [];
 
+if(notes){
+  showNotes()
+}
 
-  input.addEventListener('keypress',(e)=>{
-    if(e.key == "Enter"){
-      if(edit){
-        edit = false;
-       let finddata = input.value;
-        notes.splice(index,1,finddata);
-        localStorage.setItem("notes",JSON.stringify(notes));
-     showLists();
-     input.value = "";
+function setLocalStorage(){
+  localStorage.setItem('notes',JSON.stringify(notes));
+}
 
-      }
-      else{
-        notes.push(input.value);
-        localStorage.setItem("notes",JSON.stringify(notes));
-        showLists();
-        input.value = "";
-      }
+input.addEventListener('keypress',addNotes);
+
+let idofNotes = 0;
+
+function addNotes(e){
+  if(e.key === "Enter"){
+    if(edit){
+     notes.splice(index,1,{...notes[index],text:input.value})
     }
-  })
+    else{
+      notes.push({id:idofNotes++,text:input.value});
+    }
+    input.value = "";
+    setLocalStorage()
+   showNotes();
+  }
+  
+}
 
-
-
-function showLists(){
-  str = "";
+function showNotes(){
   if(notes.length > 0){
+    addNotesContainer.innerHTML = "";
     notes.forEach(note=>{
-      str += `<p class="notes">${note}<i onclick="ondelete('${note}')" class="fa-solid fa-delete-left"></i><i onclick="onEdit('${note}')" class="fa-solid fa-pen"></i></p>`;
+      addNotesContainer.innerHTML += `<p class="notes">${note.text}<i onclick="ondelete(${note.id})" class="fa-solid fa-delete-left"></i><i onclick="onEdit(${note.id})" class="fa-solid fa-pen"></i></p>`
     });
-    addNotesContainer.innerHTML = str;
   }
-  else{
-    addNotesContainer.innerHTML = "Please Add notes";
-  }
+ 
 }
 
 
+const ondelete = (id) =>{
+  notes = notes.filter(note=>note.id !== id)
+  setLocalStorage()
+  showNotes()
+}
 
-const ondelete = (item) =>{
-  notes = notes.filter(note=>note != item);
-  localStorage.setItem("notes",JSON.stringify(notes));
-  showLists();
+const onEdit = (id) =>{ 
+ index = notes.findIndex(note=>note.id === id);
+ input.value = notes[index].text
+ edit = true;
+ 
 }
 
 
-const onEdit = (item) =>{
-  edit = true;
-   index = notes.findIndex(note=>note == item);
-  input.value = notes[index];
-}
